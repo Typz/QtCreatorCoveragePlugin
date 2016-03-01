@@ -11,10 +11,12 @@
 #include <coreplugin/editormanager/editormanager.h>
 #include <coreplugin/editormanager/ieditor.h>
 #include <texteditor/texteditor.h>
+#include <texteditor/textdocument.h>
 
 #include <QPlainTextEdit>
 #include <QScrollBar>
 
+#include <QAction>
 #include <QDebug>
 
 Visualizer::Visualizer(ProjectTreeManager *projectTreeManager, QAction *renderAction, QObject *parent) :
@@ -43,7 +45,7 @@ void Visualizer::refreshMarks()
 
     using namespace Core;
     foreach (IEditor * editor, EditorManager::visibleEditors()) {
-        const QString fileName = editor->document()->filePath();
+        const QString fileName = editor->document()->filePath().toString();
         QList<Node *> leafs = rootNode->findLeafs(fileName.split(QLatin1Char('/')).last());
         foreach (Node *leaf, leafs)
             if (FileNode *fileNode = dynamic_cast<FileNode *>(leaf))

@@ -6,6 +6,7 @@
 #include "WaitingState.h"
 
 #include <projectexplorer/projectexplorer.h>
+#include <projectexplorer/projecttree.h>
 
 #include <QAction>
 
@@ -67,8 +68,8 @@ void StateMachine::updateActionsAvailability()
 {
     using namespace ProjectExplorer;
     ProjectExplorerPlugin *projectExplorerPlugin = ProjectExplorerPlugin::instance();
-    Project *project = projectExplorerPlugin->currentProject();
-    const bool isProjectCanRun = projectExplorerPlugin->canRun(project, NormalRunMode);
+    Project *project = ProjectExplorer::ProjectTree::currentProject();
+    const bool isProjectCanRun = projectExplorerPlugin->canRun(project, Constants::NORMAL_RUN_MODE);
 
     currentState->updateActionsAvailability(isProjectCanRun);
 }

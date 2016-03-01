@@ -4,6 +4,7 @@
 #include "Parser.h"
 
 #include <projectexplorer/projectexplorer.h>
+#include <projectexplorer/projecttree.h>
 #include <projectexplorer/project.h>
 
 #include <QDebug>
@@ -18,9 +19,9 @@ void ParserExecutor::execute()
 {
     using namespace ProjectExplorer;
 
-    Project *project = ProjectExplorerPlugin::instance()->currentProject();
-    const QStringList &fileNames = project->files(Project::ExcludeGeneratedFiles);
-    const QRegExp rx(QLatin1String(".*\\.(h|cpp)"));
+    Project *project = ProjectExplorer::ProjectTree::currentProject();
+    const QStringList &fileNames = project->files(Project::SourceFiles);
+    const QRegExp rx(QLatin1String(".*\\.(h|hpp|c|cxx|cpp)"));
     const QString resultFileName = QString(QLatin1String("%1/coverage/result.info")).arg(project->projectDirectory().toString());
     QFile file(resultFileName);
     QTextStream stream(&file);

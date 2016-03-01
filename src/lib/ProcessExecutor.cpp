@@ -4,6 +4,7 @@
 #include <projectexplorer/project.h>
 #include <projectexplorer/target.h>
 #include <projectexplorer/projectnodes.h>
+#include <projectexplorer/projecttree.h>
 #include <projectexplorer/buildconfiguration.h>
 
 #include <QDebug>
@@ -21,8 +22,7 @@ void ProcessExecutor::execute()
 {
     using namespace ProjectExplorer;
 
-    ProjectExplorerPlugin *projectExplorerPlugin = ProjectExplorerPlugin::instance();
-    Project *project = projectExplorerPlugin->currentProject();
+    Project *project = ProjectExplorer::ProjectTree::currentProject();
 
     const QString &buildDir = project->activeTarget()->activeBuildConfiguration()->buildDirectory().toString();
     const QString &objectFilesDir = getObjectFilesDir(buildDir);
@@ -34,6 +34,8 @@ void ProcessExecutor::execute()
 
     const QString program = QLatin1String("lcov");
     const QStringList arguments = {
+        QLatin1String("--gcov-tool"),
+        QLatin1String("/usr/bin/gcov-4.6"),
         QLatin1String("-d"),
         objectFilesDir,
         QLatin1String("-c"),
@@ -70,7 +72,7 @@ QString ProcessExecutor::getRunConfigurationPath(ProjectExplorer::ProjectNode *p
     foreach (ProjectNode *projectNode, parent->subProjectNodes()) {
         foreach (RunConfiguration *runConfiguration, projectNode->runConfigurations())
             if (runConfiguration == activeRunConfiguration)
-                return projectNode->path();
+                return projectNode->filePath().toString();
 
         const QString &runConfigurationPath = getRunConfigurationPath(projectNode, activeRunConfiguration);
         if (!runConfigurationPath.isEmpty())

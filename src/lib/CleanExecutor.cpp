@@ -1,6 +1,7 @@
 #include "CleanExecutor.h"
 
 #include <projectexplorer/projectexplorer.h>
+#include <projectexplorer/projecttree.h>
 #include <projectexplorer/project.h>
 #include <projectexplorer/target.h>
 #include <projectexplorer/projectnodes.h>
@@ -17,8 +18,7 @@ void CleanExecutor::execute()
 {
     using namespace ProjectExplorer;
 
-    ProjectExplorerPlugin *projectExplorerPlugin = ProjectExplorerPlugin::instance();
-    Project *project = projectExplorerPlugin->currentProject();
+    Project *project = ProjectExplorer::ProjectTree::currentProject();
 
     const QString &buildDir = project->activeTarget()->activeBuildConfiguration()->buildDirectory().toString();
     const QString &objectFilesDir = getObjectFilesDir(buildDir);

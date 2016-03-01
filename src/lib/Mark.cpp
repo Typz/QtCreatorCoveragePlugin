@@ -1,9 +1,10 @@
 #include "Mark.h"
 
 #include "MarkManager.h"
+#include "codecoverageconstants.h"
 
 Mark::Mark(const QString &fileName, int lineNumber, int type) :
-    TextMark(fileName, lineNumber),
+    TextMark(fileName, lineNumber, COVERAGE_TEXT_MARK_CATEGORY),
     type(type)
 {
     setPriority(TextEditor::TextMark::NormalPriority);

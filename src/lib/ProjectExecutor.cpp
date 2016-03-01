@@ -7,6 +7,7 @@
 #include <projectexplorer/projectconfiguration.h>
 #include <projectexplorer/projectnodes.h>
 #include <projectexplorer/buildmanager.h>
+#include <projectexplorer/projecttree.h>
 
 #include <QDebug>
 
@@ -23,10 +24,9 @@ void ProjectExecutor::execute()
 {
     using namespace ProjectExplorer;
     ProjectExplorerPlugin *projectExplorerPlugin = ProjectExplorerPlugin::instance();
-    Project *startUpProject = projectExplorerPlugin->currentProject();
-    Q_ASSERT(startUpProject);
-
-    projectExplorerPlugin->runProject(startUpProject, NormalRunMode);
+    Project *startUpProject = ProjectExplorer::ProjectTree::currentProject();
+    if (startUpProject)
+        projectExplorerPlugin->runProject(startUpProject, Constants::NORMAL_RUN_MODE);
 }
 
 void ProjectExecutor::buildingFinished(bool successfully)
