@@ -7,6 +7,7 @@
 #include "ProjectTreeManager.h"
 #include "LinePainter.h"
 #include "LineCleaner.h"
+#include "codecoverageconstants.h"
 
 #include <coreplugin/editormanager/editormanager.h>
 #include <coreplugin/editormanager/ieditor.h>
@@ -126,13 +127,12 @@ QMap<int, int> Visualizer::getLineCoverage() const
     QMap<int, int> lineCoverage;
 
     if (BaseTextEditor *textEditor = currentTextEditor())
-        if (TextDocument *textDocument = textEditor->textDocument()) {
-            TextMarks marks = textDocument->marks();
-            foreach (TextMark *mark, marks) {
-                if (Mark *trueMark = dynamic_cast<Mark *>(mark))
+        if (TextDocument *textDocument = textEditor->textDocument())
+            foreach (TextMark *mark, textDocument->marks())
+                if (mark->category() == COVERAGE_TEXT_MARK_CATEGORY) {
+                    Mark *trueMark = static_cast<Mark *>(mark);
                     lineCoverage.insert(trueMark->lineNumber(), trueMark->getType());
-            }
-        }
+                }
 
     return lineCoverage;
 }
