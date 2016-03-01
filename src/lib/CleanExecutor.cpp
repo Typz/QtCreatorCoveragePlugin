@@ -6,8 +6,11 @@
 #include <projectexplorer/target.h>
 #include <projectexplorer/projectnodes.h>
 #include <projectexplorer/buildconfiguration.h>
+#include <projectexplorer/toolchain.h>
+#include <projectexplorer/kitinformation.h>
 
 #include <QDebug>
+#include <QRegularExpression>
 
 CleanExecutor::CleanExecutor(QObject *parent) :
     ProcessExecutor(parent)
@@ -24,11 +27,24 @@ void CleanExecutor::execute()
     const QString &objectFilesDir = getObjectFilesDir(buildDir);
 
     const QString program = QLatin1String("lcov");
-    const QStringList arguments = {
-        QLatin1String("-z"),
-        QLatin1String("-d"),
-        objectFilesDir
-    };
+    QStringList arguments;
+    if (ToolChain *tc = ToolChainKitInformation::toolChain(project->activeTarget()->kit())) {
+        QRegularExpression compilerRegexp(QLatin1String("(gcc|g++|clang|clang++)"));
+        QRegularExpressionMatch match = compilerRegexp.match(tc->compilerCommand().fileName());
+        if (match.hasMatch()) {
+            QString filename = tc->compilerCommand().fileName().replace(match.capturedStart(),
+                                                                        match.capturedLength(),
+                                                                        QLatin1String("gcov"));
+            Utils::FileName gcovPath = tc->compilerCommand().parentDir().appendPath(filename);
+            if (gcovPath.exists()) {
+                arguments << QLatin1String("--gcov-tool")
+                          << gcovPath.toString();
+            }
+        }
+    }
+    arguments << QLatin1String("-z")
+              << QLatin1String("-d")
+              << objectFilesDir;
 
     process->start(program, arguments);
 }
