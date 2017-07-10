@@ -65,24 +65,6 @@ void ProcessExecutor::handleCoverageResults(int code, QProcess::ExitStatus exitS
 }
 
 //#TOTEST:
-QString ProcessExecutor::getRunConfigurationPath(ProjectExplorer::ProjectNode *parent, ProjectExplorer::RunConfiguration *activeRunConfiguration) const
-{
-    using namespace ProjectExplorer;
-
-    foreach (ProjectNode *projectNode, parent->subProjectNodes()) {
-        foreach (RunConfiguration *runConfiguration, projectNode->runConfigurations())
-            if (runConfiguration == activeRunConfiguration)
-                return projectNode->filePath().toString();
-
-        const QString &runConfigurationPath = getRunConfigurationPath(projectNode, activeRunConfiguration);
-        if (!runConfigurationPath.isEmpty())
-            return runConfigurationPath;
-    }
-
-    return QString();
-}
-
-//#TOTEST:
 QString ProcessExecutor::getObjectFilesDir(const QString &buildDir) const
 {
     QFile makeFile(buildDir + QLatin1String("/Makefile"));

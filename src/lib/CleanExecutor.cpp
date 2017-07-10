@@ -28,7 +28,8 @@ void CleanExecutor::execute()
 
     const QString program = QLatin1String("lcov");
     QStringList arguments;
-    if (ToolChain *tc = ToolChainKitInformation::toolChain(project->activeTarget()->kit())) {
+    if (ToolChain *tc = ToolChainKitInformation::toolChain(project->activeTarget()->kit(),
+                                                           ProjectExplorer::Constants::CXX_LANGUAGE_ID)) {
         QRegularExpression compilerRegexp(QLatin1String("(gcc|g++|clang|clang++)"));
         QRegularExpressionMatch match = compilerRegexp.match(tc->compilerCommand().fileName());
         if (match.hasMatch()) {
