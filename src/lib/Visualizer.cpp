@@ -5,8 +5,7 @@
 #include "Node.h"
 #include "FileNode.h"
 #include "ProjectTreeManager.h"
-#include "LinePainter.h"
-#include "LineCleaner.h"
+#include "LinePaintHandler.h"
 #include "codecoverageconstants.h"
 
 #include <coreplugin/editormanager/editormanager.h>
@@ -55,7 +54,6 @@ void Visualizer::refreshMarks()
                         markManager->addMark(fileName, lineHit.pos, lineHit.hit);
                 }
     }
-
 }
 
 void Visualizer::renderCoverage()
@@ -80,14 +78,14 @@ void Visualizer::renderCoverage()
 
 void Visualizer::renderCoverage(TextEditor::TextEditorWidget *textEdit) const
 {
-    LinePainter painter(textEdit, getLineCoverage());
+    LinePaintHandler painter(textEdit, getLineCoverage());
     painter.render();
 }
 
 void Visualizer::clearCoverage(TextEditor::TextEditorWidget *textEdit) const
 {
-    LineCleaner cleaner(textEdit);
-    cleaner.render();
+    LinePaintHandler cleaner(textEdit, QMap<int, int>());
+    cleaner.clear();
 }
 
 void Visualizer::bindEditorToPainting(Core::IEditor *editor)

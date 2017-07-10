@@ -15,6 +15,8 @@ public:
     virtual ~LinePaintHandler();
 
     void render();
+    void clear();
+
 protected:
-    virtual QColor getColorForValue(int value) const = 0;
+    QColor getColorForValue(int value) const;
 };

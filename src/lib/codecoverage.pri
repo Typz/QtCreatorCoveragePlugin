@@ -26,9 +26,7 @@ SOURCES += codecoverageplugin.cpp \
     Mark.cpp \
     MarkManager.cpp \
     Visualizer.cpp \
-    LinePainter.cpp \
-    LinePaintHandler.cpp \
-    LineCleaner.cpp
+    LinePaintHandler.cpp
 
 HEADERS += codecoverageplugin.h\
     codecoverage_global.h\
@@ -62,9 +60,7 @@ HEADERS += codecoverageplugin.h\
     Mark.h \
     MarkManager.h \
     Visualizer.h \
-    LinePainter.h \
-    LinePaintHandler.h \
-    LineCleaner.h
+    LinePaintHandler.h
 
 #include(codecoverage_dependencies.pri)
 

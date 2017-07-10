@@ -4,6 +4,8 @@
 #include <QTextCursor>
 #include <texteditor/texteditor.h>
 
+static const Core::Id CODECOVERAGE_SELECTION_ID("code-coverage");
+
 LinePaintHandler::LinePaintHandler(TextEditor::TextEditorWidget *textEdit, const QMap<int, int> &lineCoverage) :
     textEdit(textEdit),
     lineCoverage(lineCoverage)
@@ -24,6 +26,7 @@ void LinePaintHandler::render()
     QMap<int, int>::Iterator beginIterator = lineCoverage.lowerBound(startBlockNumber);
     QMap<int, int>::Iterator endIterator = lineCoverage.upperBound(endBlockNumber + 1);
     QList<QTextEdit::ExtraSelection> selections;
+    selections.reserve(endBlockNumber + 1 - startBlockNumber);
     int prevPos = startBlockNumber;
     for (auto it = beginIterator; it != endIterator; ++it) {
         int pos = it.key();
@@ -42,6 +45,16 @@ void LinePaintHandler::render()
         prevPos = pos;
     }
 
-    static const Core::Id CODECOVERAGE_SELECTION_ID("code-coverage");
     textEdit->setExtraSelections(CODECOVERAGE_SELECTION_ID, selections);
+}
+
+void LinePaintHandler::clear()
+{
+    textEdit->setExtraSelections(CODECOVERAGE_SELECTION_ID, QList<QTextEdit::ExtraSelection>());
+}
+
+QColor LinePaintHandler::getColorForValue(int value) const {
+    const QColor green(0, 255, 0, 20);
+    const QColor red(255, 0, 0, 20);
+    return value > 0 ? green : red;
 }
